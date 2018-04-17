@@ -9,7 +9,7 @@ import datetime
 from csv import reader
 from pyspark import SparkConf, SparkContext
 
-def processtimeseries(chart_events, icu_static_dict, item_ids):
+def processtimeseries(chart_events, icu_static_dict, features_list):
 	conf = SparkConf().setAppName("time series")
 	sc = SparkContext(conf=conf)
 
@@ -18,13 +18,24 @@ def processtimeseries(chart_events, icu_static_dict, item_ids):
 	chart_events_rdd = chart_events_rdd.mapPartitions(lambda x: reader(x))
 
 	def is_relevant_item(x):
-		if x[4] not in item_ids:
-			return False
-		return True
+		itemid = x[4]
+		for feature in features_list:
+			if itemid in feature["ItemIds"]:
+				return True
+		return False
 	chart_events = chart_events_rdd.filter(is_relevant_item)
 
-	#icu_id --> item_id, value, valuenum, charttime
-	chart_events = chart_events.map(lambda x: (x[3], (x[4], x[8], x[9], x[5])))
+        #icu_id --> item_id, value, valuenum, charttime
+        chart_events = chart_events.map(lambda x: (x[3], (x[4], x[8], x[9], x[5])))
+
+	def replace_itemid(x):
+		itemid = x[1][0]
+		for feature in features_list:
+			if itemid in feature["ItemIds"]:
+				item = feature["Feature"]
+				return (x[0], (item, x[1][1], x[1][2], x[1][3]))
+		return (x[0], x[1])		
+	chart_events = chart_events.map(replace_itemid)
 
 	def is_relevant_icuid(x):
 		if x[0] not in icu_static_dict.keys():
@@ -64,6 +75,7 @@ def processtimeseries(chart_events, icu_static_dict, item_ids):
 		x[1].sort(key=operator.itemgetter(1))
 		return (x[0], x[1])
 
+	#icu_id, item_id --> value, charttimeindexsorted
 	chart_events = chart_events.map(sortlist)	
 
 	def expandtimeseries(x):
@@ -84,6 +96,7 @@ def processtimeseries(chart_events, icu_static_dict, item_ids):
 			time_series_expand.append([value,timeindex])
 		return (x[0], time_series_expand)
 
+	#icu_id, item_id --> value, charttimeindexsortedwithmissing
 	chart_events = chart_events.map(expandtimeseries)
 
 	chart_events.map(lambda x: "{0}\"({1},{2})\" : {3}{4}".format('{', x[0][0], x[0][1], x[1], '}')).saveAsTextFile("icu_timeseries.out")
@@ -96,12 +109,18 @@ def processtimeseries(chart_events, icu_static_dict, item_ids):
 if __name__=='__main__':
 	chart_events = sys.argv[1]
 	icu_static = sys.argv[2]
-	item_ids = sys.argv[3].strip().split(',')	
-	
+	#item_ids = sys.argv[3].strip().split(',')	
+	features = sys.argv[3]	
+
 	icu_static_file = open(icu_static, 'r')
 	icu_static_json = json.load(icu_static_file)
 	icu_static_dict = icu_static_json["icustay_static"]
-	processtimeseries(chart_events, icu_static_dict, item_ids)
 
+	features_file = open(features, 'r')
+	features_json = json.load(features_file)
+	features_list = features_json["Features"]
 
-#spark-submit --conf spark.pyspark.python=/share/apps/python/3.4.4/bin/python sparktimeseries.py /user/rtg267/CHARTEVENTS.csv icu_static.json 211,220045,52,220052
+	#processtimeseries(chart_events, icu_static_dict, item_ids)
+	processtimeseries(chart_events, icu_static_dict, features_list)
+
+#spark-submit --conf spark.pyspark.python=/share/apps/python/3.4.4/bin/python sparktimeseries.py /user/rtg267/CHARTEVENTS.csv icu_static.json icu_features.json

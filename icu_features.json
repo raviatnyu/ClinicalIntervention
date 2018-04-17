@@ -1,0 +1,22 @@
+{
+  "Features": [
+		{
+		  "Feature" : "HeartRate",
+		  "ItemIds" : ["211", "220045"],		
+		  "FeatureType" : "Numeric",
+		  "FeaturePattern" : "TimeSeries"
+		},
+		{
+		  "Feature" : "Temperature",	
+		  "ItemIds" : [],
+		  "FeatureType" : "Numeric",
+		  "FeaturePattern" : "TimeSeries"
+		},
+		{
+                  "Feature" : "BloodPressure",
+                  "ItemIds" : ["52", "220052"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries"
+		}
+	      ]	
+}
