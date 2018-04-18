@@ -54,7 +54,7 @@ def processtimeseries(chart_events, icu_static_dict, features_list):
 			diff = etime - stime
 			return int(diff.total_seconds()/3600)
 		
-		intime = icu_static_dict[x[0]]['intime']
+		intime = icu_static_dict[x[0]]['Intime']
 		charttime = x[1][3]
 		charttimeindex = gettimeindex(intime, charttime)	
 		return ((x[0], x[1][0], charttimeindex), x[1][1])

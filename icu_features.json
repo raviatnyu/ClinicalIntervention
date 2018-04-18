@@ -7,16 +7,34 @@
 		  "FeaturePattern" : "TimeSeries"
 		},
 		{
-		  "Feature" : "Temperature",	
-		  "ItemIds" : [],
-		  "FeatureType" : "Numeric",
-		  "FeaturePattern" : "TimeSeries"
-		},
-		{
                   "Feature" : "BloodPressure",
                   "ItemIds" : ["52", "220052"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries"
-		}
+		},
+                {
+                  "Feature" : "AdmissionType",
+                  "ItemIds" : [],
+                  "FeatureType" : "Categoric",
+                  "FeaturePattern" : "Static"
+                },
+                { 
+                  "Feature" : "Gender",
+                  "ItemIds" : [], 
+                  "FeatureType" : "Categoric",
+                  "FeaturePattern" : "Static"
+                },
+                { 
+                  "Feature" : "Age",
+                  "ItemIds" : [], 
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "Static"
+                },
+                {
+                  "Feature" : "Ethnicity",
+                  "ItemIds" : [],
+                  "FeatureType" : "Categoric",
+                  "FeaturePattern" : "Static"
+                }
 	      ]	
 }

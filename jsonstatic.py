@@ -11,14 +11,14 @@ def createstaticdict(icu_static):
 		patient_id, adm_type, ethnicity, intime, outtime, \
 			gender, dateofb, age = attributes.split(',')
 		return_dict[stayid] = {
-					 'patient_id': patient_id,
-					 'adm_type': adm_type,
-					 'ethnicity': ethnicity,
-					 'intime': intime,
-					 'outtime': outtime,
-					 'gender': gender,
-					 'dateofb': dateofb,
-					 'age': age
+					 'PatientId': patient_id,
+					 'AdmissionType': adm_type,
+					 'Ethnicity': ethnicity,
+					 'Intime': intime,
+					 'Outtime': outtime,
+					 'Gender': gender,
+					 'Dateofbirth': dateofb,
+					 'Age': age
 					}
 	return return_dict
 
