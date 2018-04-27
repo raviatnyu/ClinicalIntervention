@@ -14,6 +14,7 @@ class Dataset(data.Dataset):
 		self.lexicon = datalexicon
 		self.numericdata = []
 		self.categoricdata = []
+		self.labeldata = []
 		self.size = 0
 		self.featurewindow = self.dataiter.featurewindow
 		self.labelwindow = self.dataiter.labelwindow
@@ -24,7 +25,8 @@ class Dataset(data.Dataset):
 	def __getitem__(self, index):
 		numeric = self.numericdata[index]
 		categoric = self.categoricdata[index]
-		return	[numeric, categoric]
+		label = self.labeldata[index]
+		return	[numeric, categoric, label]
 
 	def getfeatureinfo(self, fname): 
 		ftype, fpattern, flexicon = None, None, None
@@ -50,9 +52,9 @@ class Dataset(data.Dataset):
 		return fvalues		
 
 	
-	def create(self):
+	def create(self, mode='train'):
 		#change to instance, label
-		for instance in self.dataiter.iterdata():
+		for instance, label in self.dataiter.iterdata(data=mode):
 			numeric_instance_data = [None for i in range(len(self.dataiter.numericfeatureindex))]
 			categoric_instance_data = [None for i in range(len(self.dataiter.categoricfeatureindex))]
 			for fname, fvalues in instance.items():
@@ -62,15 +64,17 @@ class Dataset(data.Dataset):
 				elif ftype == 'Categoric': categoric_instance_data[findex] = fvalues
 			self.numericdata.append(numeric_instance_data)
 			self.categoricdata.append(categoric_instance_data)
+			self.labeldata.append(label)
 		self.size = len(self.numericdata)
 		return
 
 	def collate_fn(self, mini_batch):
 		#labelsbatch
-		numericbatch, categoricbatch = zip(*mini_batch)
+		numericbatch, categoricbatch, labelbatch = zip(*mini_batch)
 		numerictensor = None #batch_size*num_steps*num_numeric
 		categorictensor = None #batch_size*num_steps*num_categoric
-	
+		labeltensor = torch.LongTensor(labelbatch) #batch_size
+
 		for numericfeaturebatch in zip(*numericbatch):
 			if numerictensor is None: numerictensor = torch.FloatTensor(numericfeaturebatch).unsqueeze(-1)
 			else: numerictensor = torch.cat([numerictensor, torch.FloatTensor(numericfeaturebatch).unsqueeze(-1)], dim=2)
@@ -78,19 +82,21 @@ class Dataset(data.Dataset):
 		for categoricfeaturebatch in zip(*categoricbatch):
 			if categorictensor is None: categorictensor = torch.LongTensor(categoricfeaturebatch).unsqueeze(-1)
 			else: categorictensor = torch.cat([categorictensor, torch.LongTensor(categoricfeaturebatch).unsqueeze(-1)], dim=2)
-		return numerictensor, categorictensor
+		return numerictensor, categorictensor, labeltensor
 				
 if __name__=='__main__':
-	
+
+	labeljsonfile = 'icu_label.json'	
         staticjsonfile = 'icu_static.json'
         timeseriesjsonfile = 'icu_timeseries.json'
         featuresfile = 'icu_features.json'
+	outliersfile = 'icu_outliers.json'
 
         trainfile = 'trainicuidsample.json'
         valfile = 'valicuid.json'
         testfile = 'testicuid.json'
 
-        dataiter = Dataiter(staticjsonfile, timeseriesjsonfile, featuresfile, trainfile, valfile, testfile, fwindow=6, lwindow=4, gwindow=4)
+        dataiter = Dataiter(labeljsonfile, staticjsonfile, timeseriesjsonfile, featuresfile, outliersfile, trainfile, valfile, testfile, fwindow=6, lwindow=4, gwindow=4)
         dataiter.populatefeatures()
 
         lexicon = Lexicon(dataiter)

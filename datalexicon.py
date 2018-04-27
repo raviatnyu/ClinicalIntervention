@@ -25,7 +25,8 @@ class Numeric():
 
 	def convert(self, value):
 		if value not in self.outliers:
-			value = (float(value) - self.mean)/self.std
+			#value = (float(value) - self.mean)/self.std
+			value = float(value)
 		else: value = 0.0
 		return value
 
@@ -56,6 +57,7 @@ class Categoric():
 		print(self.index2cat)	
 		
 	def convert(self, value):
+		#and value in self.cat2index
 		if value not in self.outliers:
 			value = self.cat2index[value]
 		else: value = self.cat2index['UNK']
@@ -94,15 +96,17 @@ class Lexicon():
 		return		
 
 if __name__=='__main__':
+	labeljsonfile = 'icu_label.json'
         staticjsonfile = 'icu_static.json'
         timeseriesjsonfile = 'icu_timeseries.json'
         featuresfile = 'icu_features.json'
+	outliersfile = 'icu_outliers.json'
 
         trainfile = 'trainicuid.json'
         valfile = 'valicuid.json'
         testfile = 'testicuid.json'
 
-        dataiter = Dataiter(staticjsonfile, timeseriesjsonfile, featuresfile, trainfile, valfile, testfile, fwindow=6, lwindow=4, gwindow=4)	
+        dataiter = Dataiter(labeljsonfile, staticjsonfile, timeseriesjsonfile, featuresfile, outliersfile, trainfile, valfile, testfile, fwindow=6, lwindow=4, gwindow=4)	
         dataiter.populatefeatures()
 
         lexicon = Lexicon(dataiter)

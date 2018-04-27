@@ -9,7 +9,7 @@ import datetime
 from csv import reader
 from pyspark import SparkConf, SparkContext
 
-def processtimeseries(chart_events, icu_static_dict, features_list):
+def processtimeseries(chart_events, chart_events_type, icu_static_dict, features_list, hadm_dict=None):
 	conf = SparkConf().setAppName("time series")
 	sc = SparkContext(conf=conf)
 
@@ -18,15 +18,25 @@ def processtimeseries(chart_events, icu_static_dict, features_list):
 	chart_events_rdd = chart_events_rdd.mapPartitions(lambda x: reader(x))
 
 	def is_relevant_item(x):
-		itemid = x[4]
+		if chart_events_type=='vitals': itemid = x[4]
+		elif chart_events_type=='labs': itemid = x[3]
 		for feature in features_list:
 			if itemid in feature["ItemIds"]:
 				return True
 		return False
 	chart_events = chart_events_rdd.filter(is_relevant_item)
 
+	if chart_events_type=='labs':
+		def is_relevant_hadm(x):
+			if x[2] in hadm_dict: return True
+			return False 
+		chart_events = chart_events.filter(is_relevant_hadm)
+
         #icu_id --> item_id, value, valuenum, charttime
-        chart_events = chart_events.map(lambda x: (x[3], (x[4], x[8], x[9], x[5])))
+	if chart_events_type=='vitals':
+        	chart_events = chart_events.map(lambda x: (x[3], (x[4], x[8], x[9], x[5])))
+	elif chart_events_type=='labs':
+		chart_events = chart_events.map(lambda x: (hadm_dict[x[2]] , (x[3], x[5], x[6], x[4])))
 
 	def replace_itemid(x):
 		itemid = x[1][0]
@@ -108,9 +118,10 @@ def processtimeseries(chart_events, icu_static_dict, features_list):
 	
 if __name__=='__main__':
 	chart_events = sys.argv[1]
-	icu_static = sys.argv[2]
+	chart_events_type = sys.argv[2] #vitals or labs
+	icu_static = sys.argv[3]
 	#item_ids = sys.argv[3].strip().split(',')	
-	features = sys.argv[3]	
+	features = sys.argv[4]	
 
 	icu_static_file = open(icu_static, 'r')
 	icu_static_json = json.load(icu_static_file)
@@ -120,7 +131,13 @@ if __name__=='__main__':
 	features_json = json.load(features_file)
 	features_list = features_json["Features"]
 
-	#processtimeseries(chart_events, icu_static_dict, item_ids)
-	processtimeseries(chart_events, icu_static_dict, features_list)
+	hadm_dict = {}
+	for icuid, attributes in icu_static_dict.items():
+		hadm_dict[attributes['HadmId']] = icuid
 
-#spark-submit --conf spark.pyspark.python=/share/apps/python/3.4.4/bin/python sparktimeseries.py /user/rtg267/CHARTEVENTS.csv icu_static.json icu_features.json
+	#processtimeseries(chart_events, icu_static_dict, item_ids)
+	processtimeseries(chart_events, chart_events_type, icu_static_dict, features_list, hadm_dict)
+
+#spark-submit --conf spark.pyspark.python=/share/apps/python/3.4.4/bin/python sparktimeseries.py /user/rtg267/CHARTEVENTS.csv vitals icu_static.json icu_features.json
+
+#spark-submit --conf spark.pyspark.python=/share/apps/python/3.4.4/bin/python sparktimeseries.py /user/rtg267/LABEVENTS.csv labs icu_static.json icu_features.json

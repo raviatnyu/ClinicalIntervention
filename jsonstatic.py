@@ -9,7 +9,7 @@ def createstaticdict(icu_static):
 	for icu_stay in file:
 		stayid, attributes = icu_stay.strip().split('\t')
 		patient_id, adm_type, ethnicity, intime, outtime, \
-			gender, dateofb, age = attributes.split(',')
+			gender, dateofb, age, hadm_id = attributes.split(',')
 		return_dict[stayid] = {
 					 'PatientId': patient_id,
 					 'AdmissionType': adm_type,
@@ -18,7 +18,8 @@ def createstaticdict(icu_static):
 					 'Outtime': outtime,
 					 'Gender': gender,
 					 'Dateofbirth': dateofb,
-					 'Age': age
+					 'Age': age,
+					 'HadmId': hadm_id
 					}
 	return return_dict
 

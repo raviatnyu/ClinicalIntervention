@@ -29,8 +29,8 @@ def processstatic(icu_stays, admissions, patients):
 	#icu_adm = icu_adm.map(lambda x: (x[1][0][1] , (x[1][0][0], x[1][1][0], x[1][1][1], x[1][1][2], x[1][0][2], x[1][0][3])))
 	#icu_adm = icu_adm.filter(lambda x: x[1][0] == x[1][1])
 
-	#patient_id --> icustay_id, adm_type, ethnicity, intime, outtime
-	icu_adm = icu_adm.map(lambda x: (x[1][0][0] , (x[1][0][1], x[1][1][1], x[1][1][2], x[1][0][2], x[1][0][3])))
+	#patient_id --> icustay_id, adm_type, ethnicity, intime, outtime, hadmid
+	icu_adm = icu_adm.map(lambda x: (x[1][0][0] , (x[1][0][1], x[1][1][1], x[1][1][2], x[1][0][2], x[1][0][3], x[0])))
 	#patient_id --> gender, dateofb
 	patients = patients_rdd.map(lambda x : (x[1], (x[2], x[3])))
 
@@ -49,8 +49,8 @@ def processstatic(icu_stays, admissions, patients):
 		elif units == 'hours':
 			return diff.total_seconds()/3600
 
-	#icustay_id --> patient_id, adm_type, ethnicity, intime, outtime, gender, dateofb, age
-	icu_adm = icu_adm.map(lambda x: (x[1][0][0], (x[0], x[1][0][1], x[1][0][2], x[1][0][3], x[1][0][4], x[1][1][0], x[1][1][1], datetime_diff(x[1][1][1], x[1][0][3], 'years', 500))))
+	#icustay_id --> patient_id, adm_type, ethnicity, intime, outtime, gender, dateofb, age, hadm_id
+	icu_adm = icu_adm.map(lambda x: (x[1][0][0], (x[0], x[1][0][1], x[1][0][2], x[1][0][3], x[1][0][4], x[1][1][0], x[1][1][1], datetime_diff(x[1][1][1], x[1][0][3], 'years', 500), x[1][0][5])))
 
 	def filterpatients(x):
 		age = int(x[1][7])
@@ -63,7 +63,7 @@ def processstatic(icu_stays, admissions, patients):
 			
 	icu_adm = icu_adm.filter(filterpatients)	
 
-	icu_adm.map(lambda x: "{0}\t{1},{2},{3},{4},{5},{6},{7},{8}".format(x[0], x[1][0], x[1][1], x[1][2], x[1][3], x[1][4], x[1][5], x[1][6], x[1][7])).saveAsTextFile("icu_static.out")
+	icu_adm.map(lambda x: "{0}\t{1},{2},{3},{4},{5},{6},{7},{8},{9}".format(x[0], x[1][0], x[1][1], x[1][2], x[1][3], x[1][4], x[1][5], x[1][6], x[1][7], x[1][8])).saveAsTextFile("icu_static.out")
 
 	return
 	
