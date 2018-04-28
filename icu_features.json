@@ -16,7 +16,77 @@
 		},
                 {
                   "Feature" : "Glucose",
-                  "ItemIds" : ["50931"],
+                  "ItemIds" : ["50931", "50809"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "BloodUreaNitrogen",
+                  "ItemIds" : ["51006"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "Creatinine",
+                  "ItemIds" : ["50912"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "Bicarbonate",
+                  "ItemIds" : ["50882", "50803"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "Hematocrit",
+                  "ItemIds" : ["51221", "50810"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "Lactate",
+                  "ItemIds" : ["50813"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "Magnesium",
+                  "ItemIds" : ["50960"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "Platelets",
+                  "ItemIds" : ["51265"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "Potassium",
+                  "ItemIds" : ["50822", "50971"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "Sodium",
+                  "ItemIds" : ["50983", "50824"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Lab"
+                },
+                {
+                  "Feature" : "WBCCount",
+                  "ItemIds" : ["51301"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
                   "FeatureCategory" : "Lab"
