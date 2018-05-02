@@ -2,7 +2,7 @@
 import os
 import sys
 import json
-
+import math
 import operator
 import datetime
 
@@ -16,6 +16,13 @@ def processtimeseries(chart_events, chart_events_type, icu_static_dict, features
 	chart_events_rdd = sc.textFile(chart_events, 1)
 
 	chart_events_rdd = chart_events_rdd.mapPartitions(lambda x: reader(x))
+
+	def isfloat(x):
+        	try:
+                	float(x)
+                	return True
+        	except ValueError:
+                	return False
 
 	def is_relevant_item(x):
 		if chart_events_type=='vitals': itemid = x[4]
@@ -40,10 +47,19 @@ def processtimeseries(chart_events, chart_events_type, icu_static_dict, features
 
 	def replace_itemid(x):
 		itemid = x[1][0]
+		value = x[1][1]
 		for feature in features_list:
 			if itemid in feature["ItemIds"]:
+				if feature["Feature"] == "Temperature":
+					if itemid in feature["Fahrenheit"]:
+						if isfloat(value):
+							value = float(value)
+							value = (value-32)*(5.0/9)
+					if isfloat(value):
+						value = float(value)
+						value = math.ceil(value*100)/100
 				item = feature["Feature"]
-				return (x[0], (item, x[1][1], x[1][2], x[1][3]))
+				return (x[0], (item, value, x[1][2], x[1][3]))
 		return (x[0], x[1])		
 	chart_events = chart_events.map(replace_itemid)
 

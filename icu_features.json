@@ -5,119 +5,170 @@
 		  "ItemIds" : ["211", "220045"],		
 		  "FeatureType" : "Numeric",
 		  "FeaturePattern" : "TimeSeries",
-		  "FeatureCategory" : "Vital"
+		  "FeatureCategory" : "Vital",
+		  "FeatureRange" : [0, 300]
 		},
 		{
                   "Feature" : "BloodPressure",
-                  "ItemIds" : ["52", "220052"],
+                  "ItemIds" : ["52", "220052", "6702", "225312"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Vital"		
+                  "FeatureCategory" : "Vital",
+		  "FeatureRange" : [0, 375]		
 		},
+                {
+                  "Feature" : "Spo2",
+                  "ItemIds" : ["646", "220277"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Vital",
+		  "FeatureRange" : [0, 100]
+                },
+                {
+                  "Feature" : "Fio2",
+                  "ItemIds" : ["3420", "223835"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Vital",
+		  "FeatureRange" : [0, 100]
+                },
+                {
+                  "Feature" : "SpontRR",
+                  "ItemIds" : ["614", "653", "1884", "224689", "224422"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Vital",
+		  "FeatureRange" : [0, 100]
+                },
+                {
+                  "Feature" : "Temperature",
+                  "ItemIds" : ["676", "677", "223762", "678", "679", "223761"],
+		  "Celsius" : ["676", "677", "223762"],
+		  "Fahrenheit" : ["678", "679", "223761"],
+                  "FeatureType" : "Numeric",
+                  "FeaturePattern" : "TimeSeries",
+                  "FeatureCategory" : "Vital",
+		  "FeatureRange" : [0, 50]
+                },
                 {
                   "Feature" : "Glucose",
                   "ItemIds" : ["50931", "50809"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 2500]
                 },
                 {
                   "Feature" : "BloodUreaNitrogen",
                   "ItemIds" : ["51006"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 275]
                 },
                 {
                   "Feature" : "Creatinine",
                   "ItemIds" : ["50912"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 75]
                 },
                 {
                   "Feature" : "Bicarbonate",
                   "ItemIds" : ["50882", "50803"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 100]
                 },
                 {
                   "Feature" : "Hematocrit",
                   "ItemIds" : ["51221", "50810"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 100]
                 },
                 {
                   "Feature" : "Lactate",
                   "ItemIds" : ["50813"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 50]
                 },
                 {
                   "Feature" : "Magnesium",
                   "ItemIds" : ["50960"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 50]
                 },
                 {
                   "Feature" : "Platelets",
                   "ItemIds" : ["51265"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 2000]
                 },
                 {
                   "Feature" : "Potassium",
                   "ItemIds" : ["50822", "50971"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 50]
                 },
                 {
                   "Feature" : "Sodium",
                   "ItemIds" : ["50983", "50824"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 200]
                 },
                 {
                   "Feature" : "WBCCount",
                   "ItemIds" : ["51301"],
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "TimeSeries",
-                  "FeatureCategory" : "Lab"
+                  "FeatureCategory" : "Lab",
+		  "FeatureRange" : [0, 500]
                 },
                 {
                   "Feature" : "AdmissionType",
                   "ItemIds" : [],
                   "FeatureType" : "Categoric",
                   "FeaturePattern" : "Static",
-                  "FeatureCategory" : ""
+                  "FeatureCategory" : "",
+		  "FeatureRange" : []
                 },
                 { 
                   "Feature" : "Gender",
                   "ItemIds" : [], 
                   "FeatureType" : "Categoric",
                   "FeaturePattern" : "Static",
-                  "FeatureCategory" : ""
+                  "FeatureCategory" : "",
+		  "FeatureRange" : []
                 },
                 { 
                   "Feature" : "Age",
                   "ItemIds" : [], 
                   "FeatureType" : "Numeric",
                   "FeaturePattern" : "Static",
-                  "FeatureCategory" : ""
+                  "FeatureCategory" : "",
+		  "FeatureRange" : [10, 100]
                 },
                 {
                   "Feature" : "Ethnicity",
                   "ItemIds" : [],
                   "FeatureType" : "Categoric",
                   "FeaturePattern" : "Static",
-                  "FeatureCategory" : ""
+                  "FeatureCategory" : "",
+		  "FeatureRange" : []
                 }
 	      ]	
 }

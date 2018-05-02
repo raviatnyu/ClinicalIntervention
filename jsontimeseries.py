@@ -34,3 +34,7 @@ if __name__=='__main__':
 	timeseries_file = open(icu_timeseries_json, 'w')
 	timeseries_file.write(json.dumps({'icustay_timeseries':timeseries_dict}))
 	timeseries_file.close()
+
+#python jsontimeseries.py icu_timeseries_vitals.txt icu_timeseries_labs.txt icu_timeseries.json
+
+

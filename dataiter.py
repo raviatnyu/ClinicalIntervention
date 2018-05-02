@@ -20,7 +20,8 @@ class Dataiter():
 		self.timeseriesfeatures = {} #fname:ftype	 
 		self.numericfeatureindex = {}
 		self.categoricfeatureindex = {}
-		
+		self.featureranges = {} #fname:frange	
+	
 		self.featurewindow = fwindow
 		self.labelwindow = lwindow
 		self.gapwindow = gwindow
@@ -43,17 +44,19 @@ class Dataiter():
 				self.numericfeatureindex[featurename] = len(self.numericfeatureindex)
 			elif featuretype == 'Categoric':
 				self.categoricfeatureindex[featurename] = len(self.categoricfeatureindex)
-	
+			self.featureranges[featurename] = feature["FeatureRange"]	
+
 		print(self.staticfeatures)
 		print(self.timeseriesfeatures)
 		print(self.numericfeatureindex)
 		print(self.categoricfeatureindex)
+		print(self.featureranges)
 
 	def processoutlier(self, fname, fvalue):
 		if fname in self.outliers:
 			outliersdict = self.outliers[fname]
 			if fvalue in outliersdict:
-				print(fvalue)
+				#print(fvalue)
 				return outliersdict[fvalue]
 		return fvalue
 
@@ -119,12 +122,14 @@ class Dataiter():
 			if labelswindow[0][0] == 0:
 				for i in range(len(labelswindow)-1):
 					if labelswindow[i+1][0] == 1:
-						return 2
+						return 1
+						#return 2
 				return 0
 			elif labelswindow[0][0] == 1:
 				for i in range(len(labelswindow)-1):
 					if labelswindow[i+1][0] == 0:
-						return 3
+						return 0
+						#return 3
 				return 1
 							
 		if data == 'train': validicuids = self.trainids
@@ -181,6 +186,8 @@ class Dataiter():
 					label = labelseries[sslice+labeldistance:sslice+labeldistance+labelrange]
 					label = classifylabel(label)
 					yield instance, label	
+				del timeseries_data[icu_stay]
+				del static_data[icu_stay]
 
 if __name__=='__main__':
 
@@ -209,6 +216,7 @@ if __name__=='__main__':
 		if i==10:
 			break
 
-	for instance, label in dataiter.iterdata():
+	'''for instance, label in dataiter.iterdata():
 		print(instance)	
-		print(label)
+		print(label)'''
+	print(dataiter.categoricfeatureindex["Gender"])

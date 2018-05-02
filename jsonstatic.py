@@ -30,3 +30,5 @@ if __name__=='__main__':
 	static_file = open(icu_static_json, 'w')
 	static_file.write(json.dumps({'icustay_static':static_dict}))
 	static_file.close()
+
+#python jsonstatic.py icu_static.txt icu_static.json 

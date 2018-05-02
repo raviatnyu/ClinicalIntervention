@@ -5,28 +5,45 @@ import numpy
 from dataiter import Dataiter
 
 class Numeric():
-	def __init__(self, fname):
+	def __init__(self, fname, frange):
 		self.mean = 0
 		self.std = 0
+		self.minimum = frange[0]
+		self.maximum = frange[1]
 		self.values = []
 		self.outliers = [-2, -1, '']
 		self.fname = fname
 
 	def process_instance(self, value):
 		if value not in self.outliers:
-			self.values.append(value)
+			value = float(value)
+			if value < self.maximum and value > self.minimum:
+				self.values.append(value)
 		return
 
 	def preprocess(self):
 		nparray = numpy.array(self.values).astype(numpy.float)
 		self.mean = numpy.mean(nparray)
 		self.std = numpy.std(nparray)
-		print(self.fname, self.mean, self.std)
+		print(self.fname, self.mean, self.std, nparray.max(), nparray.min())
+		#self.save()
+	
+	def save(self):
+		nparray = numpy.array(self.values).astype(numpy.float)
+		nparray = numpy.sort(nparray).tolist()
+		cur_dir = os.getcwd()
+		rel_path = 'NumericRange/' + self.fname + '.txt'
+		full_path = os.path.join(cur_dir, rel_path)
+		file = open(full_path, 'w')
+		file.write(str(nparray))
+		file.close() 
 
 	def convert(self, value):
 		if value not in self.outliers:
-			#value = (float(value) - self.mean)/self.std
 			value = float(value)
+			if value < self.maximum*1.5 and value > self.minimum*1.5:
+				value = (value - self.mean)/self.std
+			else: value = 0.0
 		else: value = 0.0
 		return value
 
@@ -78,7 +95,8 @@ class Lexicon():
 		def process(fname, ftype, fvalue):
 			if fname not in self.lexicon:
 				if ftype == "Numeric":
-					self.lexicon[fname] = Numeric(fname)
+					frange = self.dataiter.featureranges[fname]
+					self.lexicon[fname] = Numeric(fname, frange)
 				elif ftype == "Categoric":
 					self.lexicon[fname] = Categoric(fname)
 			self.lexicon[fname].process_instance(fvalue)
@@ -102,9 +120,9 @@ if __name__=='__main__':
         featuresfile = 'icu_features.json'
 	outliersfile = 'icu_outliers.json'
 
-        trainfile = 'trainicuid.json'
-        valfile = 'valicuid.json'
-        testfile = 'testicuid.json'
+        trainfile = 'trainicuidsample.json'
+        valfile = 'valicuidsample.json'
+        testfile = 'testicuidsample.json'
 
         dataiter = Dataiter(labeljsonfile, staticjsonfile, timeseriesjsonfile, featuresfile, outliersfile, trainfile, valfile, testfile, fwindow=6, lwindow=4, gwindow=4)	
         dataiter.populatefeatures()
@@ -113,6 +131,6 @@ if __name__=='__main__':
         lexicon.load()
         lexicon.create()
 
-
+	print(len(lexicon.lexicon["Gender"].cat2index))
 
 		

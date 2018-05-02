@@ -16,9 +16,9 @@ def get_data(mode='train', batch_size=2, shuffle=True, dataiter=None, lexicon=No
         featuresfile = 'icu_features.json'
 	outliersfile = 'icu_outliers.json'
 
-        trainfile = 'trainicuid.json'
-        valfile = 'valicuid.json'
-        testfile = 'testicuid.json'
+        trainfile = 'trainicuidhalf.json'
+        valfile = 'valicuidhalf.json'
+        testfile = 'testicuidhalf.json'
 
 	if dataiter is None:
         	dataiter = Dataiter(labeljsonfile, staticjsonfile, timeseriesjsonfile, featuresfile, outliersfile, trainfile, valfile, testfile, fwindow=6, lwindow=4, gwindow=4)
@@ -29,12 +29,13 @@ def get_data(mode='train', batch_size=2, shuffle=True, dataiter=None, lexicon=No
         	lexicon.load()
         	lexicon.create()
 
+	print(len(dataiter.timeseries["icustay_timeseries"]))
         dataset = Dataset(dataiter, lexicon)
         dataset.create(mode)
-
+	print(len(dataiter.timeseries["icustay_timeseries"]))
 	dataloader = data.DataLoader(dataset, batch_size=batch_size, collate_fn=dataset.collate_fn,  shuffle=shuffle)
 	
-	if mode=='train': return dataloader, dataiter, lexicon
+	if mode=='train': return dataloader, dataiter, lexicon, dataset.__len__()
 	else: return dataloader
 
 
