@@ -24,6 +24,7 @@ else: USE_CUDA = False
 
 
 def evaluate(model, valloader, dataiter):
+	threshold = 0.5
         num_correct, num_total, bayes_acc = 0.0, 0.0, 0.0
 	ypredictions, ytargets, yscores = [], [], []
         if True:
@@ -47,7 +48,7 @@ def evaluate(model, valloader, dataiter):
                         model = model.eval()
                         probs = model(numericalfeatures, gfeatures, efeatures, afeatures)
                         #predictions = probs.max(dim=-1)[1]
-			predictions = (probs > 0.5).long().view(-1)
+			predictions = (probs > threshold).long().view(-1)
                         bayes_acc = bayes_acc + (labels==0).sum().item()
                         num_correct = num_correct + (predictions==labels).sum().item()
                         num_total = num_total + batch_size
@@ -55,9 +56,9 @@ def evaluate(model, valloader, dataiter):
 			ytargets.extend(labels.cpu().data.numpy().tolist())
 			yscores.extend(probs.view(-1).cpu().data.numpy().tolist())
 
-	print(ypredictions[0:20])
-	print(ytargets[0:20])
-	print(yscores[0:20])
+	#print(ypredictions[0:20])
+	#print(ytargets[0:20])
+	#print(yscores[0:20])
 	auc = roc_auc_score(ytargets, yscores)
 	tn, fp, fn, tp = confusion_matrix(ytargets, ypredictions).ravel()
 	accuracy = (tp+tn+0.0)/(tp+tn+fp+fn+0.0)
@@ -66,9 +67,9 @@ def evaluate(model, valloader, dataiter):
 	print("FP", fp)
 	print("FN", fn)
 	print("TN", tn)
-	print(accuracy)
-	print(len(ypredictions))
-	print(len(ytargets))
+	print("Recall", recall)
+	#print(len(ypredictions))
+	#print(len(ytargets))
 	print("AUC", auc)
 	del ypredictions[:]
 	del ytargets[:]

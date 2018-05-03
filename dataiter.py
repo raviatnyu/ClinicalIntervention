@@ -126,6 +126,7 @@ class Dataiter():
 						#return 2
 				return 0
 			elif labelswindow[0][0] == 1:
+				if True: return -1
 				for i in range(len(labelswindow)-1):
 					if labelswindow[i+1][0] == 0:
 						return 0
@@ -185,7 +186,8 @@ class Dataiter():
 
 					label = labelseries[sslice+labeldistance:sslice+labeldistance+labelrange]
 					label = classifylabel(label)
-					yield instance, label	
+					if label == 0  or label == 1:
+						yield instance, label	
 				del timeseries_data[icu_stay]
 				del static_data[icu_stay]
 

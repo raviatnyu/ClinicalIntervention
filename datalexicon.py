@@ -13,6 +13,8 @@ class Numeric():
 		self.values = []
 		self.outliers = [-2, -1, '']
 		self.fname = fname
+		self.feature_scaling = 'Standardization' 
+		#'Standardization', 'Rescaling', 'MeanNormalization'
 
 	def process_instance(self, value):
 		if value not in self.outliers:
@@ -39,11 +41,18 @@ class Numeric():
 		file.close() 
 
 	def convert(self, value):
-		if value not in self.outliers:
-			value = float(value)
-			if value < self.maximum*1.5 and value > self.minimum*1.5:
+		#value will not be in self.outliers if we fill it with prev
+		if value in self.outliers:
+			value = self.mean
+			#return 0.0
+		value = float(value)
+		if value < self.maximum*1.5 and value > self.minimum*1.5:
+			if self.feature_scaling == 'Standardization':
 				value = (value - self.mean)/self.std
-			else: value = 0.0
+			elif self.feature_scaling == 'Rescaling':
+				value = (value - self.minimum)/(self.maximum - self.minimum)
+			elif self.feature_scaling == 'MeanNormalization':
+				value = (value - self.mean)/(self.maximum - self.minimum)	
 		else: value = 0.0
 		return value
 

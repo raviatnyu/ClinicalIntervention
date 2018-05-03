@@ -12,6 +12,7 @@ import torch.optim as optim
 
 import dataloader as loader
 from evaluate import evaluate
+#from modellogres import MLP
 from modelmlp import MLP
 #from modelrecurrent import Recurrent
 
@@ -82,14 +83,14 @@ def train():
 	learning_rate = 1
 	#criterion = nn.NLLLoss()
 	#criterion = nn.CrossEntropyLoss()
-	criterion = nn.BCEWithLogitsLoss()
+	#criterion = nn.BCEWithLogitsLoss()
 	optimizer = optim.Adadelta(filter(lambda p: p.requires_grad, model.parameters()), lr=learning_rate, rho=0.9, eps=1e-06, weight_decay=0)
 	#learning_rate = 0.1
 	#optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, weight_decay=0.1)	
 
 	if USE_CUDA:
 		model = model.cuda()
-		criterion = criterion.cuda()
+		#criterion = criterion.cuda()
 
 	print("Start training...")
 	num_epochs = 10
@@ -121,6 +122,13 @@ def train():
 			optimizer.zero_grad()
 			logprobs = model(numericalfeatures, gfeatures, efeatures, afeatures)
 			model_time = time.time()
+			
+			#print(labels)
+			weightpos, weightneg = 1, 0.2
+			weights = labels.view(-1).float()*weightpos + (1-labels.view(-1)).float()*weightneg  
+			#print(weights)
+			criterion = nn.BCEWithLogitsLoss(weight=weights)
+			if USE_CUDA: criterion = criterion.cuda()
 
 			loss = criterion(logprobs.squeeze(), labels.float())
 

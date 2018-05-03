@@ -21,7 +21,7 @@ def get_data(mode='train', batch_size=2, shuffle=True, dataiter=None, lexicon=No
         testfile = 'testicuidhalf.json'
 
 	if dataiter is None:
-        	dataiter = Dataiter(labeljsonfile, staticjsonfile, timeseriesjsonfile, featuresfile, outliersfile, trainfile, valfile, testfile, fwindow=6, lwindow=4, gwindow=4)
+        	dataiter = Dataiter(labeljsonfile, staticjsonfile, timeseriesjsonfile, featuresfile, outliersfile, trainfile, valfile, testfile, fwindow=6, lwindow=4, gwindow=1, fillprevvalue=True)
         	dataiter.populatefeatures()
 
 	if lexicon is None:
